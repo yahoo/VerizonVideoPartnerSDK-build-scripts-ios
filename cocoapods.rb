@@ -7,7 +7,7 @@ lane :update_podspec do |options|
   podspec = options[:podspec]
   raise "Expecting podspec!" unless podspec != nil
 
-  UI.important("Updating podspec with version #{version} and #{asset_url}!")
+  UI.important("Updating #{podspec} with version #{version} and #{asset_url}.")
 
   podspec_contents =
     File.open(podspec, 'rb') { |file| file.read }
