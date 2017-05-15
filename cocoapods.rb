@@ -11,8 +11,8 @@ lane :update_podspec do |options|
 
   podspec_contents =
     File.open(podspec, 'rb') { |file| file.read }
-    .gsub(/"version"/, "\"#{version}\"")
-    .gsub(/"framework_zip_url"/, "\"#{asset_url}\"")
+    .gsub(/new_version/, "#{version}")
+    .gsub(/framework_zip_url/, "#{asset_url}")
   File.open(podspec, 'w') { |file| file.write(podspec_contents) }
 end
 

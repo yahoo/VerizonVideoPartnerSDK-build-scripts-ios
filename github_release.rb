@@ -6,18 +6,18 @@ require 'json'
 
 GITHUB_API_SERVER_URL = "https://api.github.com"
 
-def headers(api_token)
+def headers()
   require 'base64'
   headers = Hash.new
   headers['User-Agent'] = 'onemobilesdk_github_release'
-  headers['Authorization'] = "Basic #{Base64.strict_encode64(api_token)}" if api_token
+  api_token = ENV["GITHUB_API_TOKEN"]
+  headers['Authorization'] = "Basic #{Base64.strict_encode64(api_token)}" unless api_token == nil
   headers
 end
 
 desc "Upload assets to Github Release"
 lane :upload_assets do |options|
   url_template = options[:upload_url]
-  api_token = options[:api_token]
   assets = options[:assets]
 
   result = Array.new
@@ -31,12 +31,12 @@ lane :upload_assets do |options|
   result
 end
 
-def upload_file(file, url_template, api_token)
+def upload_file(file, url_template)
   require 'addressable/template'
   name = File.basename(file)
   UI.important("Uploading file '#{name}'...")
   expanded_url = Addressable::Template.new(url_template).expand(name: name).to_s
-  headers = headers(api_token)
+  headers = headers()
   headers['Content-Type'] = 'application/zip'
 
   response = Excon.post(expanded_url, headers: headers, body: File.read(file))
@@ -55,7 +55,6 @@ end
 desc "Update existing GitHub Release"
 lane :update_github_release do |options|
   repo_name = options[:repo_name]
-  api_token = options[:api_token]
   tag_name = options[:tag_name]
   is_draft = options[:is_draft]
   is_prerelease = options[:is_prerelease]
@@ -71,7 +70,7 @@ lane :update_github_release do |options|
   body = body_obj.to_json
 
   url = "#{GITHUB_API_SERVER_URL}/repos/#{repo_name}/releases/#{release_id}"
-  response = Excon.patch(url, headers: headers(api_token), body: body)
+  response = Excon.patch(url, headers: headers(), body: body)
 
   case response.status
   when 201
@@ -114,20 +113,18 @@ end
 desc "Get all GitHub Releases for repo"
 lane :get_github_releases do |options|
   repo_name = options[:repo_name]
-  api_token = options[:api_token]
 
   url = "#{GITHUB_API_SERVER_URL}/repos/#{repo_name}/releases"
-  response = Excon.get(url, headers: headers(api_token))
+  response = Excon.get(url, headers: headers())
 
   handleResponse(response, repo_name)
 end
 
 lane :get_latest_release do |options|
   repo_name = options[:repo_name]
-  api_token = options[:api_token]
 
   url = "#{GITHUB_API_SERVER_URL}/repos/#{repo_name}/releases/latest"
-  response = Excon.get(url, headers: headers(api_token))
+  response = Excon.get(url, headers: headers())
 
   handleResponse(response, repo_name)
 end
@@ -135,11 +132,10 @@ end
 desc "Get all assets for GitHub Releases"
 lane :get_assets_list do |options|
   repo_name = options[:repo_name]
-  api_token = options[:api_token]
   release_id = options[:release_id]
 
   url = "#{GITHUB_API_SERVER_URL}/repos/#{repo_name}/releases/#{release_id}/assets"
-  response = Excon.get(url, headers: headers(api_token))
+  response = Excon.get(url, headers: headers())
 
   handleResponse(response, repo_name)
 end
@@ -147,11 +143,10 @@ end
 desc "Delete asset for GitHub Release"
 lane :delete_asset do |options|
   repo_name = options[:repo_name]
-  api_token = options[:api_token]
   asset_id = options[:asset_id]
 
   url = "#{GITHUB_API_SERVER_URL}/repos/#{repo_name}/releases/assets/#{asset_id}"
-  response = Excon.delete(url, headers: headers(api_token))
+  response = Excon.delete(url, headers: headers())
   case response.status
   when 204
     UI.success("Successfully deleted #{asset_id}!")
@@ -164,13 +159,10 @@ end
 
 lane :get_release_by_tag do |options|
   version = options[:tag]
-  api_token = options[:api_token]
   repo_name = options[:repo_name]
 
   draft_release = nil
-  releases = get_github_releases(
-    api_token: api_token,
-    repo_name: repo_name)
+  releases = get_github_releases(repo_name: repo_name)
   releases.each do |current|
     next unless current['tag_name'] == version
 
@@ -182,12 +174,10 @@ end
 
 lane :publish_release do |options|
   release_version = options[:release_version]
-  api_token = options[:api_token]
   repo_name = options[:repo_name]
 
   release = get_release_by_tag(
     tag: release_version,
-    api_token: api_token,
     repo_name: repo_name)
 
   UI.user_error!("Release not found for tag #{version}") if release == nil
@@ -197,6 +187,5 @@ lane :publish_release do |options|
     release_id: release["id"],
     is_draft: false,
     is_prerelease: false,
-    repo_name: repo_name,
-    api_token: api_token)
+    repo_name: repo_name)
 end
