@@ -1,15 +1,8 @@
 module Fastlane
   module Actions
-    module SharedValues
-      GITHUB_CHANGELOG = :GITHUB_CHANGELOG
-    end
-
     class GithubChangelogGeneratorAction < Action
       def self.run(params)        
         output_file_path = params[:output]
-        UI.message "Parameter GITHUB_CHANGELOG_TOKEN: #{params[:token]}"
-        UI.message "Parameter output: #{output_file_path}"
-        UI.message "Parameter unreleased_only: #{params[:unreleased_only]}"
 
         action = "github_changelog_generator"
         action << " --token #{params[:token]}"
@@ -60,12 +53,6 @@ module Fastlane
                                        description: "Unreleased Changelog only or not",
                                        is_string: false, 
                                        default_value: false)
-        ]
-      end
-
-      def self.output
-        [
-          ['GITHUB_CHANGELOG', 'A changelog generated from GitHub']
         ]
       end
 

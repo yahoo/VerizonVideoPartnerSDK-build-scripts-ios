@@ -1,16 +1,13 @@
 module Fastlane
   module Actions
-    class UpdatePodspecAction < Action
+    class DeployPodspecAction < Action
       def self.run(params)
         podspec = params[:podspec_path]
-        version = params[:version]
-        asset_url = params[:framewokr_link_url]
-        UI.message "Parameter API Token: #{podspec}"
-
-        podspec_contents = File.open(podspec, 'rb') { |file| file.read }
-          .gsub(/new_version/, "#{version}")
-          .gsub(/framework_zip_url/, "#{asset_url}")
-        File.open(podspec, 'w') { |file| file.write(podspec_contents) }
+        spec_repo_name = params[:spec_repo_name]
+        spec_repo_url = params[:spec_repo_url]
+        swift_version = params[:swift_version]
+        sh "pod repo add #{spec_repo_name} #{spec_repo_url}" unless sh("pod repo list").include? spec_repo_name
+        sh "pod repo push #{spec_repo_name} #{podspec} --swift-version=#{swift_version}"
       end
 
       #####################################################
@@ -18,7 +15,7 @@ module Fastlane
       #####################################################
 
       def self.description
-        "Updating podspec file with version and framework url link"
+        "Deploy podspec to the spec repo"
       end
 
       def self.available_options
@@ -27,18 +24,19 @@ module Fastlane
                                        description: "Podspec path + name",
                                        is_string: true,
                                        optional: false),
-          FastlaneCore::ConfigItem.new(key: :version,
-                                       description: "Version value for podspec to be updated with.",
+          FastlaneCore::ConfigItem.new(key: :spec_repo_name,
+                                       description: "CocoaPods spec repository name.",
                                        is_string: true,
                                        optional: false),
-          FastlaneCore::ConfigItem.new(key: :framewokr_link_url,
-                                       description: "Web link/url to framework zip",
+          FastlaneCore::ConfigItem.new(key: :spec_repo_url,
+                                       description: "CocoaPods spec repository url.",
+                                       is_string: true,
+                                       optional: false),
+          FastlaneCore::ConfigItem.new(key: :swift_version,
+                                       description: "Swift version.",
                                        is_string: true,
                                        optional: false)
         ]
-      end
-
-      def self.return_value
       end
 
       def self.authors
