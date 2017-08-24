@@ -2,6 +2,7 @@ module Fastlane
   module Actions
     class UpdatePodspecAction < Action
       def self.run(params)
+        require 'cocoapods'
         podspec = params[:podspec_path]
         version = params[:version]
         asset_url = params[:framewokr_link_url]

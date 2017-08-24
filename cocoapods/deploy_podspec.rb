@@ -2,6 +2,7 @@ module Fastlane
   module Actions
     class DeployPodspecAction < Action
       def self.run(params)
+        require 'cocoapods'
         podspec = params[:podspec_path]
         spec_repo_name = params[:spec_repo_name]
         spec_repo_url = params[:spec_repo_url]

@@ -2,6 +2,7 @@ module Fastlane
   module Actions
     class GithubChangelogGeneratorAction < Action
       def self.run(params)        
+        require 'github_changelog_generator'
         output_file_path = params[:output]
 
         action = "github_changelog_generator"
