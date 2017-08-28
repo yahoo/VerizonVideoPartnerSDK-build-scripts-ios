@@ -126,6 +126,8 @@ module Fastlane
                 true
               when "upload_assets_to_github_release"
                 true
+              when "update_github_release"
+                true
               else
                 UI.user_error!("Don't support action: #{value}")
               end
