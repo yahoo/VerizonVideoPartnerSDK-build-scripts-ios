@@ -15,7 +15,7 @@ module Fastlane
         case action
         when "get_github_releases"
           tag = params[:tag]
-          response = Excon.get(baseUrl, headers)          
+          response = Excon.get(baseUrl, headers: headers)          
           releases = handleResponse(response, repo_name)  
 
           if tag == nil 
@@ -31,12 +31,12 @@ module Fastlane
           end
           
         when "get_latest_github_release"
-          response = Excon.get(baseUrl << "/latest", headers)
+          response = Excon.get(baseUrl << "/latest", headers: headers)
           return handleResponse(response, repo_name)
 
         when "get_assets_list_of_release"          
           release_id = params[:release_id]
-          response = Excon.get(baseUrl << "/#{release_id}/assets", headers)
+          response = Excon.get(baseUrl << "/#{release_id}/assets", headers: headers)
           return handleResponse(response, repo_name)
 
         when "delete_asset_in_release"
@@ -68,7 +68,7 @@ module Fastlane
           body_obj['body'] = description if description != nil
           body = body_obj.to_json
 
-          response = Excon.patch(baseUrl << "/#{release_id}", headers)
+          response = Excon.patch(baseUrl << "/#{release_id}", headers: headers)
           return handleResponse(response, repo_name)
 
         when "upload_assets_to_github_release"
