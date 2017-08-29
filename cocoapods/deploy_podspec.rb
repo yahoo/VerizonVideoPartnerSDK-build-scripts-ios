@@ -9,7 +9,7 @@ module Fastlane
         swift_version = params[:swift_version]
         sources_repo = params[:sources_repo]
         sh "pod repo add #{spec_repo_name} #{spec_repo_url}" unless sh("pod repo list").include? spec_repo_name
-        sh "pod repo push #{spec_repo_name} #{podspec} --verbose --sources=#{sources_repo} --swift-version=#{swift_version}"
+        sh "pod repo push #{spec_repo_name} #{podspec} --sources=#{sources_repo} --swift-version=#{swift_version}"
       end
 
       #####################################################
