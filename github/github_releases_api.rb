@@ -174,10 +174,12 @@ module Fastlane
           FastlaneCore::ConfigItem.new(
             key: :is_draft,
             description: "GitHub Release is draft or not",
+            is_string: false,
             optional: true),
           FastlaneCore::ConfigItem.new(
             key: :is_prerelease,
             description: "GitHub Release is prerelease or release",
+            is_string: false,
             optional: true),
           FastlaneCore::ConfigItem.new(
             key: :description,
@@ -192,7 +194,8 @@ module Fastlane
           FastlaneCore::ConfigItem.new(
             key: :assets,
             description: "An array of pathes to assets for uploading to GitHub Release",
-            optional: true)
+            optional: true,
+            is_string: false)
         ]
       end
 
