@@ -5,7 +5,7 @@ module Fastlane
         require 'excon'
         require 'json'
         require 'base64'
-        
+
         action = params[:action]
         repo_name = params[:repo_name]
         github_api_server_url = params[:github_api_server_url]
@@ -246,7 +246,7 @@ module Fastlane
         expanded_url = Addressable::Template.new(url_template).expand(name: filename).to_s
         headers['Content-Type'] = 'application/zip'
 
-        response = Excon.post(expanded_url, headers: headers, body: File.read(file))
+        response = Excon.post(expanded_url, headers: headers, body: File.read(filePath))
 
         case response.status
         when 201

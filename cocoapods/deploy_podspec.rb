@@ -7,8 +7,9 @@ module Fastlane
         spec_repo_name = params[:spec_repo_name]
         spec_repo_url = params[:spec_repo_url]
         swift_version = params[:swift_version]
+        sources_repo = params[:sources_repo]
         sh "pod repo add #{spec_repo_name} #{spec_repo_url}" unless sh("pod repo list").include? spec_repo_name
-        sh "pod repo push #{spec_repo_name} #{podspec}"
+        sh "pod repo push #{spec_repo_name} #{podspec} --verbose --sources=#{sources_repo} --swift-version=#{swift_version}"
       end
 
       #####################################################
@@ -35,6 +36,10 @@ module Fastlane
                                        optional: false),
           FastlaneCore::ConfigItem.new(key: :swift_version,
                                        description: "Swift version",
+                                       is_string: true,
+                                       optional: false),
+          FastlaneCore::ConfigItem.new(key: :sources_repo,
+                                       description: "Podspecs sources repo",
                                        is_string: true,
                                        optional: false)
         ]
