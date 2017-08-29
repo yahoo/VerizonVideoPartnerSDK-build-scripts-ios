@@ -5,7 +5,7 @@ module Fastlane
         require 'excon'
         require 'json'
         require 'base64'
-
+        
         action = params[:action]
         repo_name = params[:repo_name]
         github_api_server_url = params[:github_api_server_url]
@@ -68,7 +68,7 @@ module Fastlane
           body_obj['body'] = description if description != nil
           body = body_obj.to_json
 
-          response = Excon.patch(baseUrl << "/#{release_id}", headers: headers)
+          response = Excon.patch(baseUrl << "/#{release_id}", headers: headers, body: body)
           return handleResponse(response, repo_name)
 
         when "upload_assets_to_github_release"
@@ -80,14 +80,14 @@ module Fastlane
             absolute_path = File.absolute_path(asset)
             UI.user_error!("Asset #{absolute_path} doesn't exist") unless File.exist?(absolute_path)
 
-            result << upload_file(absolute_path, url_template, headers)
+            result << self.upload_file(absolute_path, url_template, headers)
           end
           return result
 
-      else
-        UI.user_error!("Not implemented!")
+        else
+          UI.user_error!("Not implemented!")
+        end
       end
-    end
 
       #####################################################
       # @!group Documentation
@@ -239,9 +239,9 @@ module Fastlane
         end
       end
 
-      def self.upload_file(file, url_template, headers)
+      def self.upload_file(filePath, url_template, headers)
         require 'addressable/template'
-        filename = File.basename(file)
+        filename = File.basename(filePath)
         UI.important("Uploading file '#{filename}'...")
         expanded_url = Addressable::Template.new(url_template).expand(name: filename).to_s
         headers['Content-Type'] = 'application/zip'

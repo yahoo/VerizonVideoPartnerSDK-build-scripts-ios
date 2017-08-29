@@ -28,7 +28,7 @@ module Fastlane
                                        is_string: true,
                                        optional: false),
           FastlaneCore::ConfigItem.new(key: :version,
-                                       description: "Version value for podspec to be updated with.",
+                                       description: "Version value for podspec to be updated with",
                                        is_string: true,
                                        optional: false),
           FastlaneCore::ConfigItem.new(key: :framewokr_link_url,
