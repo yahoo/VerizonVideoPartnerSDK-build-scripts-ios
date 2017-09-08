@@ -2,26 +2,14 @@ module Fastlane
   module Actions
     class SourceryAction < Action
       def self.run(params)
-        command = '
-            # Exit immediately if a command exits with a non-zero status
-            set -e
+        action = params[:action]
 
-            # If Sourcery installed, exit with success code
-            if which sourcery > /dev/null; then
-                exit 0
-            fi
-
-            # If Homebrew missed, exit with error code
-            if ! which brew > /dev/null; then
-                exit 1
-            fi
-
-            # Install Sourcery with Homebrew
-            brew install sourcery
-        '
-        # If command errored, generate Fastlane error
-        unless system(command)
-           UI.user_error!('Homebrew is missing. Please visit https://brew.sh and install brew.')
+        case action
+        when "install"
+            require 'brew'
+            brew(command: 'install sourcery')
+        else
+          UI.user_error!("Not implemented!")
         end
       end
 
@@ -31,6 +19,30 @@ module Fastlane
 
       def self.description
         "Install Sourcery via Homebrew if needed"
+      end
+
+      def self.details
+        "
+        - Install Sourcery via Homebrew
+        "
+      end
+
+      def self.available_options
+        [
+          FastlaneCore::ConfigItem.new(
+            key: :action,
+            description: "List of possible actions",
+            is_string: true,
+            optional: false,
+            verify_block: proc do |value|
+              case value
+              when "install"
+                true
+              else
+                UI.user_error!("Don't support action: #{value}")
+              end
+            end)
+        ]
       end
 
       def self.authors
