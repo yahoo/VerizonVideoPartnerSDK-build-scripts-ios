@@ -24,6 +24,18 @@ module Fastlane
            UI.user_error!('Homebrew is missing. Please visit https://brew.sh and install brew.')
         end
       end
+
+      #####################################################
+      # @!group Documentation
+      #####################################################
+
+      def self.description
+        "Install Sourcery via Homebrew if needed"
+      end
+
+      def self.authors
+        ["BogdanBilonog"]
+      end
     end
   end
 end
