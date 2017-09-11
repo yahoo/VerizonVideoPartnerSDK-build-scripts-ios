@@ -8,6 +8,12 @@ module Fastlane
         when "install"
             require 'brew'
             brew(command: 'install sourcery')
+        when "run"
+            sources = params[:sources]
+            templates = params[:templates]
+            output = params[:output]
+
+            sh "sourcery --sources #{sources} --templates #{templates} --output #{templates}"
         else
           UI.user_error!("Not implemented!")
         end
@@ -18,12 +24,13 @@ module Fastlane
       #####################################################
 
       def self.description
-        "Install Sourcery via Homebrew if needed"
+        "Work with Sourcery"
       end
 
       def self.details
         "
         - Install Sourcery via Homebrew
+        - Run Sourcery
         "
       end
 
@@ -37,6 +44,8 @@ module Fastlane
             verify_block: proc do |value|
               case value
               when "install"
+                true
+              when "run"
                 true
               else
                 UI.user_error!("Don't support action: #{value}")
