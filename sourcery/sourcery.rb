@@ -13,7 +13,7 @@ module Fastlane
             templates = params[:templates]
             output = params[:output]
 
-            sh "sourcery --sources #{sources} --templates #{templates} --output #{templates}"
+            sh "sourcery --sources #{sources} --templates #{templates} --output #{output}"
         else
           UI.user_error!("Not implemented!")
         end
@@ -50,7 +50,26 @@ module Fastlane
               else
                 UI.user_error!("Don't support action: #{value}")
               end
-            end)
+            end
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :sources,
+            description: "Path to source folder for Sourcery",
+            is_string: true,
+            optional: false
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :templates,
+            description: "Path to template folder for Sourcery",
+            is_string: true,
+            optional: false
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :output,
+            description: "Path to output folder/file for Sourcery",
+            is_string: true,
+            optional: false
+          )
         ]
       end
 
