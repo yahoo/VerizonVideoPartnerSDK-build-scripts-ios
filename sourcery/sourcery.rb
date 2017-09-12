@@ -56,19 +56,19 @@ module Fastlane
             key: :sources,
             description: "Path to source folder for Sourcery",
             is_string: true,
-            optional: false
+            optional: true
           ),
           FastlaneCore::ConfigItem.new(
             key: :templates,
             description: "Path to template folder for Sourcery",
             is_string: true,
-            optional: false
+            optional: true
           ),
           FastlaneCore::ConfigItem.new(
             key: :output,
             description: "Path to output folder/file for Sourcery",
             is_string: true,
-            optional: false
+            optional: true
           )
         ]
       end
