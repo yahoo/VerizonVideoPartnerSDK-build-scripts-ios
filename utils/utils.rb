@@ -6,6 +6,7 @@ module Fastlane
 
         case action
         when "is_branch_up_to_date"
+            git_branch = params[:git_branch]
             sh "git fetch"
             current = sh("git rev-parse HEAD")
             origin = sh("git rev-parse origin/#{git_branch}")
@@ -48,6 +49,12 @@ module Fastlane
                 UI.user_error!("Don't support action: #{value}")
               end
             end
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :git_branch,
+            description: "Git branch",
+            is_string: true,
+            optional: true
           )
         ]
       end

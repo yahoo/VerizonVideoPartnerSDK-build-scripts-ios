@@ -84,6 +84,10 @@ module Fastlane
           end
           return result
 
+        when "is_release_exist"
+            params[:action] = "get_github_releases"
+            release = run(params)
+            return release != nil
         else
           UI.user_error!("Not implemented!")
         end
@@ -104,6 +108,7 @@ module Fastlane
         - Upload asset to GitHub Release\
         - Delete asset from GitHub Release\
         - Get list of assets for GitHub Release\
+        - Check GitHub release existence\
         "
       end
 
@@ -127,6 +132,8 @@ module Fastlane
               when "upload_assets_to_github_release"
                 true
               when "update_github_release"
+                true
+              when "is_release_exist"
                 true
               else
                 UI.user_error!("Don't support action: #{value}")
@@ -195,7 +202,12 @@ module Fastlane
             key: :assets,
             description: "An array of pathes to assets for uploading to GitHub Release",
             optional: true,
-            is_string: false)
+            is_string: false),
+          FastlaneCore::ConfigItem.new(
+            key: :version,
+            description: "Version of GitHub release",
+            optional: true,
+            is_string: true)
         ]
       end
 
