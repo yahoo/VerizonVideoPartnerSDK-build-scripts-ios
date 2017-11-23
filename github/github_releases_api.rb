@@ -7,6 +7,7 @@ module Fastlane
         require 'base64'
 
         action = params[:action]
+        UI.important action
         repo_name = params[:repo_name]
         github_api_server_url = params[:github_api_server_url]
         headers = headers(params)
@@ -40,7 +41,7 @@ module Fastlane
           return handleResponse(response, repo_name)
 
         when "delete_asset_in_release"
-          asset_id = params[:asset_id]          
+          asset_id = params[:asset_id]       
           response = Excon.delete(baseUrl << "/assets/#{asset_id}", headers: headers)
           case response.status
           when 204
@@ -88,6 +89,21 @@ module Fastlane
             params[:action] = "get_github_releases"
             release = run(params)
             return release != nil
+
+        when "delete_latest_release"
+            tag = params[:tag]
+
+            release = Excon.get(baseUrl + "/tags/#{tag}", headers: headers)            
+            UI.user_error! "No latest release" if release.status != 200
+
+            tag = Excon.delete("#{github_api_server_url}/repos/#{repo_name}/git/refs/tags/#{tag}", headers: headers)
+            UI.important "No tag to delete - #{tag}" if tag.status != 204            
+
+            body = JSON.parse release.body
+            response = Excon.delete(baseUrl + "/#{body["id"]}", headers: headers)
+            UI.important "No release to delete!" if release.status != 204
+            
+            return body
         else
           UI.user_error!("Not implemented!")
         end
@@ -134,6 +150,8 @@ module Fastlane
               when "update_github_release"
                 true
               when "is_release_exist"
+                true
+              when "delete_latest_release"
                 true
               else
                 UI.user_error!("Don't support action: #{value}")
