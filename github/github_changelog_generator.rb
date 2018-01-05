@@ -9,6 +9,8 @@ module Fastlane
         action << " --token #{params[:token]}"
         action << " --output #{output_file_path}" 
         action << " --unreleased-only" if params[:unreleased_only] == true
+        action << " --no-issues"
+        action << " --no-compare-link"
 
         sh action        
         contents = File.open(output_file_path, 'rb') { |f| f.read }
