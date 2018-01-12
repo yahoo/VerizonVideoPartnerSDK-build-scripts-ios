@@ -90,20 +90,29 @@ module Fastlane
             release = run(params)
             return release != nil
 
-        when "delete_latest_release"
+        when "delete_latest_prerelease"            
+            releases_response = Excon.get(baseUrl, headers: headers)
+            UI.important "Unable to get releases!" if releases_response.status != 200
+
+            releases = JSON.parse releases_response.body
             tag = params[:tag]
+            latest_release = releases.select { |release| release["tag_name"] == tag }.first
 
-            release = Excon.get(baseUrl + "/tags/#{tag}", headers: headers)            
-            UI.user_error! "No latest release" if release.status != 200
+            if latest_release == nil
+              UI.success "No release to delete! Skipping!" 
+            else
+              UI.user_error! "Not a prerelease!" if latest_release["prerelease"] == false
+              
+              release_id = latest_release["id"]
+              UI.important "#{latest_release["name"]}"
 
-            tag = Excon.delete("#{github_api_server_url}/repos/#{repo_name}/git/refs/tags/#{tag}", headers: headers)
-            UI.important "No tag to delete - #{tag}" if tag.status != 204            
+              delete_tag_response = Excon.delete("#{github_api_server_url}/repos/#{repo_name}/git/refs/tags/#{tag}", headers: headers)
+              UI.important "No tag to delete - #{tag}" if delete_tag_response.status != 204 
 
-            body = JSON.parse release.body
-            response = Excon.delete(baseUrl + "/#{body["id"]}", headers: headers)
-            UI.important "No release to delete!" if release.status != 204
-            
-            return body
+              delete_release_response = Excon.delete(baseUrl + "/#{release["id"]}", headers: headers)
+              UI.important "No GitHub release to delete!" if delete_release_response.status != 204              
+            end
+
         else
           UI.user_error!("Not implemented!")
         end
@@ -125,6 +134,7 @@ module Fastlane
         - Delete asset from GitHub Release\
         - Get list of assets for GitHub Release\
         - Check GitHub release existence\
+        - Delete GitHub release and tag\
         "
       end
 
@@ -151,7 +161,7 @@ module Fastlane
                 true
               when "is_release_exist"
                 true
-              when "delete_latest_release"
+              when "delete_latest_prerelease"
                 true
               else
                 UI.user_error!("Don't support action: #{value}")
