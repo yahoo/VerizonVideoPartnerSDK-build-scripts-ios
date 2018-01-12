@@ -92,25 +92,25 @@ module Fastlane
 
         when "delete_latest_prerelease"            
             releases_response = Excon.get(baseUrl, headers: headers)
-            UI.important "Unable to get releases!" if releases_response.status != 200
+            UI.important 'Unable to get releases!' if releases_response.status != 200
 
             releases = JSON.parse releases_response.body
             tag = params[:tag]
-            latest_release = releases.select { |release| release["tag_name"] == tag }.first
+            latest_release = releases.select { |release| release['tag_name'] == tag }.first
 
             if latest_release == nil
-              UI.success "No release to delete! Skipping!" 
+              UI.success 'No release to delete! Skipping!'
             else
-              UI.user_error! "Not a prerelease!" if latest_release["prerelease"] == false
+              UI.user_error! 'Not a prerelease!' if latest_release['prerelease'] == false
               
-              release_id = latest_release["id"]
-              UI.important "#{latest_release["name"]}"
+              release_id = latest_release['id']
+              UI.important "#{latest_release['name']}"
 
               delete_tag_response = Excon.delete("#{github_api_server_url}/repos/#{repo_name}/git/refs/tags/#{tag}", headers: headers)
               UI.important "No tag to delete - #{tag}" if delete_tag_response.status != 204 
 
-              delete_release_response = Excon.delete(baseUrl + "/#{release["id"]}", headers: headers)
-              UI.important "No GitHub release to delete!" if delete_release_response.status != 204              
+              delete_release_response = Excon.delete(baseUrl + "/#{release_id}", headers: headers)
+              UI.important 'No GitHub release to delete!' if delete_release_response.status != 204              
             end
 
         else
