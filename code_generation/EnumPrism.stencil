@@ -15,10 +15,8 @@ import Foundation
 
 /*Creates value type of the form foo: Type1*/
 {% macro associatedValueVarUnitType case %}
-    {% if case.associatedValues.first.isOptional %}
-        {{ case.associatedValues.first.type.name }}?
-    {% else %}
-        {{ case.associatedValues.first.typeName }}?
+    {% if case.associatedValues.first.type.name != nil %}
+        {{ case.associatedValues.first.type.name }}?{% else %}{{ case.associatedValues.first.typeName }}?
     {% endif %}
 {% endmacro %}
 
@@ -40,7 +38,6 @@ import Foundation
 
 /*Creates tuple var with given associated value case*/
 {% macro associatedValueVar case %}
-    /*Optional associated values not supported now*/
     {% if case.associatedValues.all.count == 1 and case.associatedValues.first.isOptional%}
         @available(*, unavailable, message:"Optional associated value is not supported yet")
     {%endif%}
