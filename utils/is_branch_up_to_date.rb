@@ -3,8 +3,8 @@ module Fastlane
     class IsBranchUpToDateAction < Action
       def self.run(params)
         git_branch = params[:git_branch]
-        sh "git fetch"
-        current = sh("git rev-parse HEAD")
+        sh 'git fetch'
+        current = sh('git rev-parse HEAD')
         origin = sh("git rev-parse origin/#{git_branch}")
         if current != origin
           UI.important("Outdated version of #{git_branch}. Skipping release!")
@@ -18,14 +18,14 @@ module Fastlane
       #####################################################
 
       def self.description
-        "Check is given git branch is up to date"
+        'Check is given git branch is up to date'
       end
 
       def self.available_options
         [
           FastlaneCore::ConfigItem.new(
             key: :git_branch,
-            description: "Git branch",
+            description: 'Git branch',
             is_string: true,
             optional: true
           )
@@ -33,7 +33,7 @@ module Fastlane
       end
 
       def self.authors
-        ["BogdanBilonog"]
+        ['BogdanBilonog']
       end
     end
   end

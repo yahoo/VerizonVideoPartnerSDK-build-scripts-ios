@@ -5,17 +5,17 @@ module Fastlane
         action = params[:action]
 
         case action
-        when "install"
-            require 'brew'
-            brew(command: 'install sourcery')
-        when "run"
-            sources = params[:sources]
-            templates = params[:templates]
-            output = params[:output]
+        when 'install'
+          require 'brew'
+          brew(command: 'install sourcery')
+        when 'run'
+          sources = params[:sources]
+          templates = params[:templates]
+          output = params[:output]
 
-            sh "sourcery --sources #{sources} --templates #{templates} --output #{output}"
+          sh "sourcery --sources #{sources} --templates #{templates} --output #{output}"
         else
-          UI.user_error!("Not implemented!")
+          UI.user_error!('Not implemented!')
         end
       end
 
@@ -24,7 +24,7 @@ module Fastlane
       #####################################################
 
       def self.description
-        "Work with Sourcery"
+        'Work with Sourcery'
       end
 
       def self.details
@@ -38,14 +38,14 @@ module Fastlane
         [
           FastlaneCore::ConfigItem.new(
             key: :action,
-            description: "List of possible actions",
+            description: 'List of possible actions',
             is_string: true,
             optional: false,
             verify_block: proc do |value|
               case value
-              when "install"
+              when 'install'
                 true
-              when "run"
+              when 'run'
                 true
               else
                 UI.user_error!("Don't support action: #{value}")
@@ -54,19 +54,19 @@ module Fastlane
           ),
           FastlaneCore::ConfigItem.new(
             key: :sources,
-            description: "Path to source folder for Sourcery",
+            description: 'Path to source folder for Sourcery',
             is_string: true,
             optional: true
           ),
           FastlaneCore::ConfigItem.new(
             key: :templates,
-            description: "Path to template folder for Sourcery",
+            description: 'Path to template folder for Sourcery',
             is_string: true,
             optional: true
           ),
           FastlaneCore::ConfigItem.new(
             key: :output,
-            description: "Path to output folder/file for Sourcery",
+            description: 'Path to output folder/file for Sourcery',
             is_string: true,
             optional: true
           )
@@ -74,7 +74,7 @@ module Fastlane
       end
 
       def self.authors
-        ["BogdanBilonog"]
+        ['BogdanBilonog']
       end
     end
   end
