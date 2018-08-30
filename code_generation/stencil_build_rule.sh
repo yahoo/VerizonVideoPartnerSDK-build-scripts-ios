@@ -7,8 +7,14 @@ fi
 
 sources=$1
 code_generation_dir=$2
+file_name=$3
 
+if [ -f ${file_name} ]
+then
+    rm ${file_name}
+fi
 sourcery --sources ${sources} \
          --sources ${code_generation_dir}/Autogeneratable.swift \
          --templates ${code_generation_dir}/${INPUT_FILE_BASE}.stencil \
-         --output ${DERIVED_SOURCES_DIR}/${INPUT_FILE_BASE}_${TARGET_NAME}.generated.swift
+         --output ${file_name}
+
