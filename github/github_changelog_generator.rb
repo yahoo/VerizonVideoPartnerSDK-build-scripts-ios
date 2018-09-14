@@ -44,7 +44,7 @@ module Fastlane
         [
           FastlaneCore::ConfigItem.new(key: :token,
                                        env_name: 'GITHUB_CHANGELOG_TOKEN',
-                                       description: 'GITHUB_CHANGELOG_TOKEN for Github ChangeLog Generator', #
+                                       description: 'GITHUB_CHANGELOG_TOKEN for Github ChangeLog Generator',
                                        verify_block: proc do |value|
                                          UI.user_error!('No GITHUB_API_TOKEN for Github ChangeLog Generator') unless value && !value.empty?
                                        end),
