@@ -9,10 +9,8 @@ sources=$1
 code_generation_dir=$2
 file_name=$3
 
-if [ -f ${file_name} ]
-then
-    rm ${file_name}
-fi
+rm -f ${file_name}
+
 sourcery --sources ${sources} \
          --sources ${code_generation_dir}/Autogeneratable.swift \
          --templates ${code_generation_dir}/${INPUT_FILE_BASE}.stencil \
