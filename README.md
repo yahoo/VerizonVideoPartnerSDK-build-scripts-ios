@@ -1,3 +1,3 @@
-# Build scripts for building & deploying OneMobileSDK project. 
+# Build scripts for building & deploying VerizonVideoPartnerSDK project. 
 
 Built on top of [Fastlane](https://fastlane.tools).
