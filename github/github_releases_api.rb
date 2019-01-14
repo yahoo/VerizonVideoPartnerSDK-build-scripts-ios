@@ -180,7 +180,7 @@ module Fastlane
             description: 'Custom User-Agent header',
             is_string: true,
             optional: false,
-            default_value: 'onemobilesdk_github_release'
+            default_value: 'VerizonVideoPartnerSDK_github_release'
           ),
           FastlaneCore::ConfigItem.new(
             key: :token,
@@ -191,10 +191,10 @@ module Fastlane
           ),
           FastlaneCore::ConfigItem.new(
             key: :repo_name,
-            description: 'GitHub Repository name (f.e. `vidible/OneMobileSDK-releases`)',
+            description: 'GitHub Repository name (f.e. `VerizonAdPlatforms/VerizonVideoPartnerSDK-releases-iOS`)',
             is_string: true,
             optional: false,
-            default_value: 'vidible/OneMobileSDK-releases'
+            default_value: 'VerizonAdPlatforms/VerizonVideoPartnerSDK-releases-iOS'
           ),
           FastlaneCore::ConfigItem.new(
             key: :release_id,
