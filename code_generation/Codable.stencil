@@ -29,7 +29,7 @@ case {{ case.name }}
     {% if case.associatedValues.all.count > 1 %}
         public struct {{ case.name|capitalize }}Controls: Codable {
             {% for associatedValue in case.associatedValues %}
-                let {{ associatedValue.localName }}{% if not forloop.last %}{% endif %}: {{ associatedValue.type.name }}
+                let {{ associatedValue.localName }}{% if not forloop.last %}{% endif %}: {{ associatedValue.typeName }}
             {% endfor %}
 }
     {% endif %}
@@ -52,9 +52,9 @@ public init(from decoder: Decoder) throws {
                     throw ErrorImage.decodeRawImage
                 {% else %}
                     {% if case.associatedValues.isOptional %}
-                        self = .{{ case.name }}({% if case.associatedValues.first.localName != nil %} {{ case.associatedValues.first.localName }}:{% endif %} try values.decode({% if case.associatedValues.first.type.name != nil %} {{ case.associatedValues.first.type.name }}.self{% else %}{{ case.associatedValues.first.typeName }}.self{% endif %}, forKey: .value))
+                        self = .{{ case.name }}({% if case.associatedValues.first.localName != nil %} {{ case.associatedValues.first.localName }}:{% endif %} try values.decode({% if case.associatedValues.first.typeName != nil %} {{ case.associatedValues.first.typeName }}.self{% else %}{{ case.associatedValues.first.typeName }}.self{% endif %}, forKey: .value))
                     {% else %}
-                    self = .{{ case.name }}({% if case.associatedValues.first.localName != nil %} {{ case.associatedValue.first.localName }}:{% endif %}try values.decode({{ case.associatedValues.first.type.name }}.self, forKey: .value))
+                    self = .{{ case.name }}({% if case.associatedValues.first.localName != nil %} {{ case.associatedValue.first.localName }}:{% endif %}try values.decode({{ case.associatedValues.first.typeName }}.self, forKey: .value))
                     {% endif %}
                 {% endif %}
             {% endif %}

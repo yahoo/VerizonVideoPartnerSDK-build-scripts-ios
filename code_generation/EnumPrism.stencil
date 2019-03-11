@@ -9,8 +9,8 @@ import Foundation
         {% if associatedValue.localName != nil %}
             {{ associatedValue.localName }}:
         {% endif %}
-        {% if associatedValue.type.name != nil %}
-            {{ associatedValue.type.name }}{% else %}{{ associatedValue.typeName }}
+        {% if associatedValue.typeName != nil %}
+            {{ associatedValue.typeName }}{% else %}{{ associatedValue.typeName }}
         {% endif %}{% if associatedValue.isOptional %}?{% endif %}
         {% if not forloop.last %}, {% endif %}
     {% endfor %})?
@@ -19,7 +19,7 @@ import Foundation
 /*Creates value type of the form foo: Type1*/
 {% macro associatedValueVarUnitType case %}
     {% if case.associatedValues.first.isOptional %}
-        {{ case.associatedValues.first.type.name }}?
+        {{ case.associatedValues.first.typeName }}?
     {% else %}
         {{ case.associatedValues.first.typeName }}?
     {% endif %}
